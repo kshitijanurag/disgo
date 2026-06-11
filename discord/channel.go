@@ -533,6 +533,8 @@ type GuildVoiceChannel struct {
 	rtcRegion            string
 	VideoQualityMode     VideoQualityMode
 	lastMessageID        *snowflake.ID
+	status               *string
+	voiceStartTime       *int64
 	nsfw                 bool
 	rateLimitPerUser     int
 }
@@ -554,6 +556,8 @@ func (c *GuildVoiceChannel) UnmarshalJSON(data []byte) error {
 	c.rtcRegion = v.RTCRegion
 	c.VideoQualityMode = v.VideoQualityMode
 	c.lastMessageID = v.LastMessageID
+	c.status = v.Status
+	c.voiceStartTime = v.VoiceStartTime
 	c.nsfw = v.NSFW
 	c.rateLimitPerUser = v.RateLimitPerUser
 	return nil
@@ -573,6 +577,8 @@ func (c GuildVoiceChannel) MarshalJSON() ([]byte, error) {
 		RTCRegion:            c.rtcRegion,
 		VideoQualityMode:     c.VideoQualityMode,
 		LastMessageID:        c.lastMessageID,
+		Status:               c.status,
+		VoiceStartTime:       c.voiceStartTime,
 		NSFW:                 c.nsfw,
 		RateLimitPerUser:     c.rateLimitPerUser,
 	})
@@ -634,6 +640,14 @@ func (c GuildVoiceChannel) LastPinTimestamp() *time.Time {
 // Topic always returns nil for GuildVoiceChannel(s) as they do not have their own topic.
 func (c GuildVoiceChannel) Topic() *string {
 	return nil
+}
+
+func (c GuildVoiceChannel) Status() *string {
+	return c.status
+}
+
+func (c GuildVoiceChannel) VoiceStartTime() *int64 {
+	return c.voiceStartTime
 }
 
 func (c GuildVoiceChannel) NSFW() bool {
